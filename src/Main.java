@@ -1,62 +1,46 @@
-interface socket380V{
-    void ChargingOn();
-    void ChargingOff();
+interface HighVoltage{
+    public void print();
 }
-
-class Charger380 implements socket380V{
-    public void ChargingOn(){
-        System.out.println("Charger with 380V is on");
-    }
-    public void ChargingOff(){
-        System.out.println("Charger with 380 is off");
-    }
+interface LowVoltage{
+    public void print();
 }
-
-class Rozetka{
-    private socket380V socket380V;
-    public Rozetka(socket380V socket380V){
-        this.socket380V = socket380V;
-    }
-    public void Test(){
-        socket380V.ChargingOn();
-        socket380V.ChargingOff();
+class _380V implements HighVoltage{
+    int voltage;
+    public void print(){
+        System.out.println("Напряжение 380 вольт");
     }
 }
-
-interface socket220V{
-    void ChargingOn220V();
-    void ChargingOff220V();
-}
-
-class Charger220 implements socket220V{
-    public void ChargingOn220V() {
-        System.out.println("Charger with 220V is on");
+class _220V implements LowVoltage{
+    int voltage;
+    public void print(){
+        System.out.println("Зарядка на напряжении 220 вольт");
     }
-    public void ChargingOff220V() {
-        System.out.println("Charger with 220V is off");
+}
+class Charging{
+    private HighVoltage highVoltage;
+    public Charging(HighVoltage highVoltage){
+        this.highVoltage=highVoltage;
+    }
+    public void charge(){
+        highVoltage.print();
     }
 }
 
-class SocketAdapter implements socket380V{
-    Charger220 charger220;
-    public SocketAdapter(Charger220 charger220){
-        this.charger220 = charger220;
+class Adatper implements HighVoltage{
+    LowVoltage lowVoltage;
+    public Adatper(LowVoltage lowVoltage){
+        this.lowVoltage=lowVoltage;
     }
-    public void ChargingOn(){
-        charger220.ChargingOn220V();
-    }
-    public void ChargingOff(){
-        charger220.ChargingOff220V();
+    @Override
+    public void print() {
+        lowVoltage.print();
     }
 }
-
 public class Main {
     public static void main(String[] args) {
-        socket380V ch380v = new Charger380();
-        Rozetka rz = new Rozetka(ch380v);
-        rz.Test();
-        SocketAdapter ch220v = new SocketAdapter(new Charger220());
-        Rozetka rzAdapter = new Rozetka(ch220v);
-        rzAdapter.Test();
+        HighVoltage V380= new _380V();
+        Adatper V220=new Adatper(new _220V());
+        Charging charger=new Charging(V220);
+        charger.charge();
     }
 }
